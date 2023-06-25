@@ -5,10 +5,6 @@ function comparingLength(string, length) {
 
 comparingLength('проверяемая строка', 20);
 
-console.log(comparingLength('проверяемая строка', 20));
-console.log(comparingLength('проверяемая строка', 18));
-console.log(comparingLength('проверяемая строка', 10));
-
 
 //Функция для проверки, является ли строка палиндромом
 function checkingЗalindrome(rawString) {
@@ -23,7 +19,4 @@ function checkingЗalindrome(rawString) {
 
 checkingЗalindrome('топот');
 
-console.log(checkingЗalindrome('топот'));
-console.log(checkingЗalindrome('ДовОд'));
-console.log(checkingЗalindrome('Кекс'));
-console.log(checkingЗalindrome('Лёша на полке клопа нашёл '));
+
