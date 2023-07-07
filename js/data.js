@@ -71,6 +71,10 @@ const createPhotoData = () => ({
   }
 });
 
+/**
+ * Создание объекта
+ * @returns {object}
+ */
 const makePhotoData = () => Array.from({length:PHOTO_DATA_COUNT}, createPhotoData);
 
 export {makePhotoData};
