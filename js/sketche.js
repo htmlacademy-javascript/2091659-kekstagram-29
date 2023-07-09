@@ -17,7 +17,7 @@ const createSketche = ({url, description, likes, comments}) => {
   /**
    * Клонирование шаблона
    */
-  const C = sketcheTemplate.cloneNode(true);
+  const sketche = sketcheTemplate.cloneNode(true);
 
   /**
    * Заполнение свойст объекта(карточки)
