@@ -1,5 +1,4 @@
-import {getRandomArrayElement} from './util.js';
-import {getRandomInteger} from './util.js';
+import {getRandomInteger, getRandomArrayElement} from './util.js';
 
 const MESSAGES = [
   'В целом всё неплохо. Но не всё.',
@@ -18,7 +17,7 @@ const NAMES = [
   'Бумбараш'
 ];
 
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   'Описание №1',
   'Описание №2',
   'Описание №3',
@@ -33,21 +32,28 @@ const DESCRIPTION = [
   'Описание №12'
 ];
 
-const MAX_PHOTO_COUNT = 25;
 const MAX_AVATAR_COUNT = 6;
 
 const MIN_LIKES_COUNT = 15;
 const MAX_LIKES_COUNT = 200;
 
 const PHOTO_DATA_COUNT = 25;
-/*
-function createId () {
-  let count = 0;
-  return function () {
-    count++;
+
+/**
+ * Генератор чисел
+ * @returns {number} число
+ */
+const getIdGenerator = () => {
+  let lastGeneratedId = 0;
+  return () => {
+    lastGeneratedId += 1;
+    return lastGeneratedId;
   };
-}
-*/
+};
+// счетчик для комментариев
+const generateCommentId = getIdGenerator();
+// счетчик для фотографий
+const generatePhotoId = getIdGenerator();
 
 
 /**
@@ -58,23 +64,26 @@ function createId () {
  * @returns {number} likes счетчик лайков
  * @returns {Array} comments массив комментариев других пользователей
  */
-const createPhotoData = () => ({
-  id: getRandomInteger(0, MAX_PHOTO_COUNT),
-  url: `photos/${getRandomInteger(0, MAX_PHOTO_COUNT)}.jpg`,
-  description: getRandomArrayElement(DESCRIPTION),
-  likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
-  comments:{
-    id: getRandomInteger(0, MAX_PHOTO_COUNT),
-    avatar: `img/avatar-${getRandomInteger(1, MAX_AVATAR_COUNT)}.svg`,
-    message: getRandomArrayElement(MESSAGES),
-    name: getRandomArrayElement(NAMES),
-  }
-});
+const makePhotoData = () => {
+  const photoId = generatePhotoId();
+  return{
+    id: photoId,
+    url: `photos/${photoId}.jpg`,
+    description: getRandomArrayElement(DESCRIPTIONS),
+    likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
+    comments:{
+      id: generateCommentId(),
+      avatar: `img/avatar-${getRandomInteger(1, MAX_AVATAR_COUNT)}.svg`,
+      message: getRandomArrayElement(MESSAGES),
+      name: getRandomArrayElement(NAMES),
+    }
+  };
+};
 
 /**
  * Создание объекта
  * @returns {object}
  */
-const makePhotoData = () => Array.from({length:PHOTO_DATA_COUNT}, createPhotoData);
+const getPhotoData = () => Array.from({length:PHOTO_DATA_COUNT}, makePhotoData);
 
-export {makePhotoData};
+export {getPhotoData};
