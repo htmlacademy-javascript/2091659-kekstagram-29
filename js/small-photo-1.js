@@ -13,7 +13,7 @@ const smallPhotoContainer = document.querySelector('.pictures');
  * @param {object}   используем параметры предоставленного объекта
  * @returns {object}
  */
-const makeOneSmallPhoto = ({url, description, likes, comments}) => {
+const makeOneSmallPhoto = ({url, description, likes, comments, id}) => {
   //Клонирование шаблона
   const smallPhoto = smallPhotoTemplate.cloneNode(true);
   //Заполнение свойст объекта(карточки)
@@ -21,6 +21,7 @@ const makeOneSmallPhoto = ({url, description, likes, comments}) => {
   smallPhoto.querySelector('.picture__img').alt = description;
   smallPhoto.querySelector('.picture__likes').textContent = likes;
   smallPhoto.querySelector('.picture__comments').textContent = comments.length;
+  smallPhoto.dataset.smallPhotoId = id;
   //Возвращаем созданную наполненнуб карточку(объект).
   return smallPhoto;
 };
@@ -30,7 +31,8 @@ const makeOneSmallPhoto = ({url, description, likes, comments}) => {
  */
 const renderAllSmallPhotos = (pictures) => {
   const fragment = document.createDocumentFragment();
-  pictures.forEach((picture) => {
+  const array = Array.from(pictures);
+  array.forEach((picture) => {
     const smallPhoto = makeOneSmallPhoto(picture);
     fragment.append(smallPhoto);
   });
