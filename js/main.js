@@ -1,5 +1,5 @@
-import './data.js';
-import {makePhotoData} from './data.jsdata';
-import {renderSketches} from './sketche.jsdata';
-
-renderSketches(makePhotoData());
+import {getPhotoData} from './data.js';
+import {renderGallery} from './gallery.js';
+import {renderAllSmallPhotos} from './small-photo-1.js';
+renderAllSmallPhotos(getPhotoData);
+renderGallery(getPhotoData());
