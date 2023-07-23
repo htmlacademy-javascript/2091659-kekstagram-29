@@ -31,8 +31,8 @@ const makeOneSmallPhoto = ({url, description, likes, comments, id}) => {
  */
 const renderAllSmallPhotos = (pictures) => {
   const fragment = document.createDocumentFragment();
-  const array = Array.from(pictures);
-  array.forEach((picture) => {
+  const transformPictures = Array.from(pictures);
+  transformPictures.forEach((picture) => {
     const smallPhoto = makeOneSmallPhoto(picture);
     fragment.append(smallPhoto);
   });
