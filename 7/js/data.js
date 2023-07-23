@@ -38,6 +38,7 @@ const MIN_LIKES_COUNT = 15;
 const MAX_LIKES_COUNT = 200;
 
 const PHOTO_DATA_COUNT = 25;
+const COMMENT_NUMBER_MAX = 30;
 
 /**
  * Генератор чисел
@@ -56,6 +57,14 @@ const generateCommentId = getIdGenerator();
 const generatePhotoId = getIdGenerator();
 
 
+const addComment = () => ({
+  id: generateCommentId(),
+  avatar: `img/avatar-${getRandomInteger(1, MAX_AVATAR_COUNT)}.svg`,
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES)
+});
+
+
 /**
  * Функция по сооздания объекта с описанием фотографии.
  * @returns {number} id  порядковый номер описания фотографии
@@ -71,12 +80,7 @@ const makePhotoData = () => {
     url: `photos/${photoId}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
-    comments:{
-      id: generateCommentId(),
-      avatar: `img/avatar-${getRandomInteger(1, MAX_AVATAR_COUNT)}.svg`,
-      message: getRandomArrayElement(MESSAGES),
-      name: getRandomArrayElement(NAMES),
-    }
+    comments: Array.from({length: getRandomInteger(0, COMMENT_NUMBER_MAX)}, addComment)
   };
 };
 
