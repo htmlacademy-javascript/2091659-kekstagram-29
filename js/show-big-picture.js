@@ -9,6 +9,7 @@ const commentsCount = bigPicture.querySelector('.social__comment-count');//сч�
 const commentsButttonLoad = document.querySelector('.social__comments-loader');//кнопка загрузки новой партии комментариев
 
 let commentsShown = 0;
+let comments = [];
 /**
  * Создание одного коментария
  * @param {object}
@@ -25,7 +26,7 @@ const createComment = ({ avatar, name, message }) => {
 };
 
 //Создание массива/списка комментариев
-const renderComments = (comments) => {
+const renderComments = () => {
   commentsShown += COMMENTS_PER_PORTION;
   if (commentsShown >= comments.length) {
     commentsButttonLoad.classList.add('hidden');
@@ -86,6 +87,7 @@ const renderPictureInformation = ({url, likes, description}) => {
 
 //Открытие модального окна
 const showBigPicture = (data) => {
+  comments = data.comments;
   bigPicture.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   commentsButttonLoad.classList.remove('hidden');
