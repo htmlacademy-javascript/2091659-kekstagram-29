@@ -1,6 +1,6 @@
 //Словарь для фильров фотографий
 const sliderEffects = {
-  default: {
+  none: {
     name: 'none',
   },
   chrome: {

@@ -1,93 +1,50 @@
-import {getRandomInteger, getRandomArrayElement} from './util.js';
-
-const MESSAGES = [
-  'В целом всё неплохо. Но не всё.',
-  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-];
-
-const NAMES = [
-  'Синий Трактор',
-  'Терминатор',
-  'Лунтик',
-  'Джон Уик',
-  'Мамкин ютубер',
-  'Бумбараш'
-];
-
-const DESCRIPTIONS = [
-  'Описание №1',
-  'Описание №2',
-  'Описание №3',
-  'Описание №4',
-  'Описание №5',
-  'Описание №6',
-  'Описание №7',
-  'Описание №8',
-  'Описание №9',
-  'Описание №10',
-  'Описание №11',
-  'Описание №12'
-];
-
-const MAX_AVATAR_COUNT = 6;
-
-const MIN_LIKES_COUNT = 15;
-const MAX_LIKES_COUNT = 200;
-
-const PHOTO_DATA_COUNT = 25;
-const COMMENT_NUMBER_MAX = 30;
-
-/**
- * Генератор чисел
- * @returns {number} число
- */
-const getIdGenerator = () => {
-  let lastGeneratedId = 0;
-  return () => {
-    lastGeneratedId += 1;
-    return lastGeneratedId;
-  };
+const BASE_URL = 'https://29.javascript.pages.academy/kekstagram'; //адрес удаленного сервера
+const Route = { //путь
+  GET_DATA: '/data',
+  SEND_DATA: '/',
 };
-// счетчик для комментариев
-const generateCommentId = getIdGenerator();
-// счетчик для фотографий
-const generatePhotoId = getIdGenerator();
-
-
-const addComment = () => ({
-  id: generateCommentId(),
-  avatar: `img/avatar-${getRandomInteger(1, MAX_AVATAR_COUNT)}.svg`,
-  message: getRandomArrayElement(MESSAGES),
-  name: getRandomArrayElement(NAMES)
-});
-
-
-/**
- * Функция по сооздания объекта с описанием фотографии.
- * @returns {number} id  порядковый номер описания фотографии
- * @returns {string} url адрес фотографии
- * @returns {string} description описание фотографии
- * @returns {number} likes счетчик лайков
- * @returns {Array} comments массив комментариев других пользователей
- */
-const makePhotoData = () => {
-  const photoId = generatePhotoId();
-  return{
-    id: photoId,
-    url: `photos/${photoId}.jpg`,
-    description: getRandomArrayElement(DESCRIPTIONS),
-    likes: getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
-    comments: Array.from({length: getRandomInteger(0, COMMENT_NUMBER_MAX)}, addComment)
-  };
+const Method = { //метод отправки
+  GET: 'GET',
+  POST: 'POST',
+};
+const ErrorText = { //текст ошибки
+  GET_DATA: 'Не удалось загрузить данные. Попробуйте обновить страницу',
+  SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
 };
 
 /**
- * Создание объекта
- * @returns {object}
+ * функция загрузки данных
+ * @param {string} route путь
+ * @param {string} errorText текст ошибки
+ * @param {string} method метод отправки
+ * @param {any} body полезные данне (null-когда отправляем данные не нужны)
+ * @returns результат ф-ии fetch - промис
  */
-const getPhotoData = () => Array.from({length:PHOTO_DATA_COUNT}, makePhotoData);
+const load = (route, errorText, method = Method.GET, body = null) =>
+  fetch(`${BASE_URL}${route}`, { method, body }) //передается путь, аргумент настроек
+    .then((response) => { //объект ответа
+      if (!response.ok) { //сервер ответил кодом, кот не является положительным
+        throw new Error(`Произошла ошибка ${response.status}: ${response.statusText}`);
+      }
+      return response.json(); //данные кот вернул сервер
+    })
+    .catch(() => { //если промис не разрешился, произошла ошибка
+      throw new Error(errorText);
+    });
 
-export {getPhotoData};
+/**
+ * получение данных с сервера
+ * даные получаем GET и если, что не так текст ошибки
+ * @returns
+ */
+const getData = () => load(Route.GET_DATA, ErrorText.GET_DATA);
+
+/**
+ * отправка данных на сервер, форму отправляем POST
+ * @param {*} body полезые данные-отправка формы
+ * @returns
+ */
+const sendData = (body) =>
+  load(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body); //путь, текст ошибки, метод
+
+export { getData, sendData };
