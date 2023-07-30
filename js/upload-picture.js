@@ -39,14 +39,37 @@ const openEditorPicture = () => {
   hideSlider();
 };
 
+
+/**
+ * функция по определению хештега
+ * @param {string} hashtagString значение инпута
+ * обрезаем пробелы, # отсоединяем по пробелу, массив с эл прошедшими проверку
+ */
 const editHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((hashtag) => Boolean(hashtag.length));
 
+/**
+ * Функция проверки введия невалидного хэш-тега
+ * @param {string} value текущее значение поля
+ * перебираем массив на заданные условия, возвращаем true или false
+ * .match() возвращает получившиеся совпадения при сопоставлении строки с регулярным выражением
+ */
 const validateHashtag = (value) => editHashtag(value).every((hashtag) => (hashtag.match(VALID_SYMBOLS)));
+
+/**
+ * Функция проверки превышено количество хэш-тегов
+ * @param {string} value текущее значение поля
+ */
 const validateHashtagCount = (value) => editHashtag(value).length <= MAX_HASHTAGS_COUNT;
+
+/**
+ * Функция проверки хэш-теги повторяются
+ * @param {string} value текущее значение поля
+ */
 const validateUniqueHashtagName = (value) => {
   const UpperCaseHashtag = editHashtag(value).map((hashtag) => hashtag.toUpperCase());
   return UpperCaseHashtag.length === new Set(UpperCaseHashtag).size;
 };
+
 
 pristine.addValidator(hashtagsField, validateHashtagCount, ERROR_TEXT.invalidCount, 3, true);
 pristine.addValidator(hashtagsField, validateHashtag, ERROR_TEXT.invalidHashtag, 2, true);
@@ -63,6 +86,10 @@ const closeEditorPicture = () => {
   resetEffect();
 };
 
+/**
+ * находим элементы в фокусе
+ * @returns {boolean} — true, если попадает в фокус
+ */
 const isFieldFocus = () => document.activeElement === hashtagsField || document.activeElement === commentsField;
 
 function onModalWindowEscape(evt) {
