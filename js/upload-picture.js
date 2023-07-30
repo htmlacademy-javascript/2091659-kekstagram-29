@@ -77,6 +77,7 @@ const validateUniqueHashtagName = (value) => {
   return UpperCaseHashtag.length === new Set(UpperCaseHashtag).size;
 };
 
+
 /**
  * валидаторы хэштэгов
  * на мах количество хэш-тэгов
