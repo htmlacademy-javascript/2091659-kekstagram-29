@@ -1,24 +1,18 @@
-/**
- * Получение целого случайного числа из заданного интервала
- * @param {number} a начало, нижняя граница интервало
- * @param {number} b финиш, верхняя граница интервала
- * @returns {number} случайное целое число из интервала
- */
-const getRandomInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
-
-/**
- * Получение случайного элемента массива
- * @param {Array} elements  массив
- * @returns случайный элемент массива
- */
-const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey};
 
+/**
+ * функция debounce
+ * @param callback
+ * @param {number} timeDelay - задержка в миллисекундах
+ * @returns
+ */
+function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);//устанавливаем время задержки с вызовом callback на эту же задержку
+  };
+}
+
+export { isEscapeKey, debounce };

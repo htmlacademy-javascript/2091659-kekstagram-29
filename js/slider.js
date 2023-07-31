@@ -6,6 +6,7 @@ const sliderConainerElement = document.querySelector('.img-upload__effect-level'
 const effectsElement = document.querySelector('.effects__list');
 const picturePreview = document.querySelector('.img-upload__preview img');
 
+
 /**
  * Функция по изменению фильтров слайдера
  * @param {object} effect имя выбраного фильтра
@@ -16,6 +17,7 @@ const changeSliderEffect = (effect, value, unit) => {
   valueEffectElement.value = value;//берёт значение из ползунка
   picturePreview.style.filter = `${effect}(${value}${unit})`;//шаблонная строка добавляет атрибут style
 };
+
 
 /**
  * отображение слайдера
@@ -81,6 +83,7 @@ const onChangeEffect = (evt) => {
   }
   showSliderEffect(effects);
 };
+
 
 /**
  * включение слайдера

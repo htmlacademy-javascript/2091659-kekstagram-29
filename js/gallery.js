@@ -1,23 +1,23 @@
-import {renderAllSmallPhotos} from './small-photo-1.js';
-import {showBigPicture} from './show-big-picture.js';
-
+import { showBigPicture } from './show-big-picture.js';
 const container = document.querySelector('.pictures');
 
+
+/**
+ * отрисовка выбранной картинки в модалке
+ * @param {*} pictures
+ */
 const renderGallery = (pictures) => {
   container.addEventListener('click', (evt) => {
-    const smallPicture = evt.target.closest('[data-small-photo-id]');
-    if (!smallPicture) {
+    const thumbnail = evt.target.closest('[data-thumbnail-id]');
+    if (!thumbnail) {
       return;
     }
-
     evt.preventDefault();
     const picture = pictures.find(
-      (item) => item.id === +smallPicture.dataset.smallPhotoId
+      (itemPictures) => itemPictures.id === +thumbnail.dataset.thumbnailId
     );
     showBigPicture(picture);
   });
-
-  renderAllSmallPhotos(pictures);
 };
 
-export {renderGallery};
+export { renderGallery };

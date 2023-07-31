@@ -3,86 +3,82 @@ import { resetScale, addButtonScaleHandler } from './scale.js';
 import { addSliderEffectHandler, hideSlider, resetEffect} from './slider.js';
 
 const MAX_HASHTAGS_COUNT = 5;
-const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1-19}$/i;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;//регулярное выражение
 const ERROR_TEXT = {
   invalidCount: `не более ${MAX_HASHTAGS_COUNT} хэш-тэгов`,
-  invalidHashtag: 'ошибка при вводе хеш-тега',
+  invalidHashtag: 'недопустимый хэш-тег',
   notUnique: 'хэш-тэг повторяется',
 };
-
 const SubmitButtonText = { //текст на кнопке отправить
   UNBLOCK: 'Сохранить',
   BLOCK: 'Загружаю'
 };
-
-
+const FILE_TYPES = ['gif', 'webp', 'jpeg', 'png', 'avif', 'jpg', 'svg'];
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');//форма загрузки
 const overlay = form.querySelector('.img-upload__overlay');//подложка
-const pictureField = form.querySelector('.img-upload__input');//контрол загрузки файла
-const hashtagsField = form.querySelector('.text__hashtags'); //input для заполнения хештегов
-const commentsField = form.querySelector('.text__description');//input для коментария
-const cancelButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
+const pictureField = form.querySelector('.img-upload__input');//загрузка файла
+const hashtagsField = form.querySelector('.text__hashtags');//выбираем поле для хэштегов
+const commentsField = form.querySelector('.text__description');//выбираем поле для комментариев
+const closeButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
 const submitButton = form.querySelector('.img-upload__submit');//кнопка отправить
+const picturePreview = document.querySelector('.img-upload__preview img');//загруженное фото для обрабоки
 
-
-/**
- * правила для формы  пристин
- */
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'img-upload__field-wrapper--error'
 });
 
+
 /**
- * функция для открытия подложки
+ * открытие подложки
  */
-const openEditorPicture = () => {
-  overlay.classList.remove('hidden');
-  body.classList.add('modal-open');
-  document.addEventListener('keydown', onModalWindowEscape);
-  addButtonScaleHandler();
-  addSliderEffectHandler();
-  hideSlider();
+const openUserPictureEditor = () => {
+  overlay.classList.remove('hidden');//показ подложки
+  body.classList.add('modal-open');//для отключения прокрутки под подложкой
+  document.addEventListener('keydown', onModalWindowEscape);//обработчик закрытия на клавишу
+  addButtonScaleHandler();// маштаб
+  addSliderEffectHandler();//бегунок слайдера
+  hideSlider();//скрывается слайдер при первоночальном показе
 };
 
-/**
- * функция по определению хештега
- * @param {string} tags значение инпута
- * обрезаем пробелы, # отсоединяем по пробелу, массив с эл прошедшими проверку
- */
-const normalHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((hashtag) => Boolean(hashtag.length));
 
 /**
- * Функция проверки введия невалидного хэш-тега
+ * определяем наличие сивола #  вначале строки каждого хэштега
+ * @param {string} hashtagString значение инпута
+ * обрезаем пробелы, # отсоединяем по пробелу, массив с эл прошедшими проверку
+ */
+const editHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((hashtag) => Boolean(hashtag.length));
+
+
+/**
+ * проверка хэш-тега на соотвествие символам из регулярного выражения
  * @param {string} value текущее значение поля
  * перебираем массив на заданные условия, возвращаем true или false
  * .match() возвращает получившиеся совпадения при сопоставлении строки с регулярным выражением
  */
-const validateHashtag = (value) => normalHashtag(value).every((hashtag) => (hashtag.match(VALID_SYMBOLS)));
+const validateHashtag = (value) => editHashtag(value).every((hashtag) => (hashtag.match(VALID_SYMBOLS)));
+
 
 /**
- * Функция проверки превышено количество хэш-тегов
+ * проверка хэш-тегов на количество
  * @param {string} value текущее значение поля
  */
-const validateHashtagCount = (value) => normalHashtag(value).length <= MAX_HASHTAGS_COUNT;
+const validateHashtagCount = (value) => editHashtag(value).length <= MAX_HASHTAGS_COUNT;
+
 
 /**
- * Функция проверки хэш-теги повторяются
+ * проверка хэш-тегов на повторение
  * @param {string} value текущее значение поля
  */
 const validateUniqueHashtagName = (value) => {
-  const UpperCaseHashtag = normalHashtag(value).map((hashtag) => hashtag.toUpperCase());
+  const UpperCaseHashtag = editHashtag(value).map((hashtag) => hashtag.toUpperCase());
   return UpperCaseHashtag.length === new Set(UpperCaseHashtag).size;
 };
 
 
 /**
- * валидаторы хэштэгов
- * на мах количество хэш-тэгов
- * на правильность ввода хэш-тэга
- * на уникальность хэш-тэга
+ * валидаторы
  */
 pristine.addValidator(hashtagsField, validateHashtagCount, ERROR_TEXT.invalidCount, 3, true);
 pristine.addValidator(hashtagsField, validateHashtag, ERROR_TEXT.invalidHashtag, 2, true);
@@ -90,16 +86,16 @@ pristine.addValidator(hashtagsField, validateUniqueHashtagName, ERROR_TEXT.notUn
 
 
 /**
- * закрытие подложки
+ * функция для закрытия подложки
  */
-const closeEditorPicture = () => {
+const closeUserPictureEditor = () => {
   form.reset();
-  overlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onModalWindowEscape);
   pristine.reset();
   resetScale();
   resetEffect();
+  overlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onModalWindowEscape);
 };
 
 
@@ -109,61 +105,81 @@ const closeEditorPicture = () => {
  */
 const isFieldFocus = () => document.activeElement === hashtagsField || document.activeElement === commentsField;
 
+
 /**
- * закрытия с помощью клавиатуры, кроме случая поле ввода в фокусе
+ * закрытие подложки с клавиатуры, кроме случяя поле ввода в фокусе
+ * @param {object} evt объект события
  */
 function onModalWindowEscape(evt) {
   if (isEscapeKey(evt) && !isFieldFocus()) {
     evt.preventDefault();
-    closeEditorPicture();
+    closeUserPictureEditor();
   }
 }
 
 
 /**
- * клик на кнопку закрыть
+ * действие при клике на кнопку закрыть
  */
-cancelButton.addEventListener('click', () => {
-  closeEditorPicture();
+closeButton.addEventListener('click', () => {
+  closeUserPictureEditor();
 });
 
-/**
- * открытие модалки
- */
-const uploadPicture = () => {
-  pictureField.addEventListener('change', openEditorPicture);
-};
 
 /**
- * Блокировка кнопки отправить
+ *блокировка кнопки отправить
  */
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = SubmitButtonText.BLOCK;
 };
 
+
 /**
- * Разблокировка кнопки отправить
+ *разблокировка кнопки отправить
  */
 const unBlockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = SubmitButtonText.UNBLOCK;
 };
 
+
+/**
+ * показ загружаемого пользователем фото
+ */
+const showUploadPicture = () => {
+  const file = pictureField.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    picturePreview.src = URL.createObjectURL(file);
+  }
+};
+
+
+/**
+ * открытие модалки при событии change
+ */
+pictureField.addEventListener('change', () => {
+  openUserPictureEditor();
+  showUploadPicture();
+});
+
+
 /**
  * отправка формы
- * @param {object} cb данные из формы
+ * @param {object} callback данные из формы
  */
-const setOnFormSubmit = (cb) => {
+const setOnFormSubmit = (callback) => {
   form.addEventListener('submit', async (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      await cb(new FormData(form));
+      await callback(new FormData(form));
       unBlockSubmitButton();
     }
   });
 };
 
-export { setOnFormSubmit, uploadPicture, closeEditorPicture};
+export { setOnFormSubmit, closeUserPictureEditor};
