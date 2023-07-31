@@ -15,28 +15,32 @@ const SubmitButtonText = { //текст на кнопке отправить
 };
 const FILE_TYPES = ['gif', 'webp', 'jpeg', 'png', 'avif', 'jpg', 'svg'];
 const body = document.querySelector('body');
-const form = document.querySelector('.img-upload__form');
-const overlay = form.querySelector('.img-upload__overlay');
-const pictureField = form.querySelector('.img-upload__input');
-const hashtagsField = form.querySelector('.text__hashtags');
-const commentsField = form.querySelector('.text__description');
-const cancelButton = form.querySelector('.img-upload__cancel');
-const submitButton = form.querySelector('.img-upload__submit');
-const picturePreview = document.querySelector('.img-upload__preview img');
-const pictureEffectsPreview = document.querySelector('.effects__preview');
+const form = document.querySelector('.img-upload__form');//форма загрузки
+const overlay = form.querySelector('.img-upload__overlay');//подложка
+const pictureField = form.querySelector('.img-upload__input');//контрол загрузки файла
+const hashtagsField = form.querySelector('.text__hashtags');//выбираем поле для хэштегов
+const commentsField = form.querySelector('.text__description');//выбираем поле для комментариев
+const cancelButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
+const submitButton = form.querySelector('.img-upload__submit');//кнопка отправить
+const picturePreview = document.querySelector('.img-upload__preview img');//загруженное фото для обрабоки
+//const pictureEffectsPreview = document.querySelector('.effects__preview');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
 });
 
+
+/**
+ * открытие подложки
+ */
 const openEditorPicture = () => {
-  overlay.classList.remove('hidden');
-  body.classList.add('modal-open');
-  document.addEventListener('keydown', onModalWindowEscape);
-  addButtonScaleHandler();
-  addSliderEffectHandler();
-  hideSlider();
+  overlay.classList.remove('hidden');//показ подложки
+  body.classList.add('modal-open');//для отключения прокрутки под подложкой
+  document.addEventListener('keydown', onModalWindowEscape);//обработчик закрытия на клавишу
+  addButtonScaleHandler();// маштаб
+  addSliderEffectHandler();//бегунок слайдера
+  hideSlider();//скрывается слайдер при первоночальном показе
 };
 
 
@@ -70,20 +74,22 @@ const validateUniqueHashtagName = (value) => {
   return UpperCaseHashtag.length === new Set(UpperCaseHashtag).size;
 };
 
-
+//валидаторы
 pristine.addValidator(hashtagsField, validateHashtagCount, ERROR_TEXT.invalidCount, 3, true);
 pristine.addValidator(hashtagsField, validateHashtag, ERROR_TEXT.invalidHashtag, 2, true);
 pristine.addValidator(hashtagsField, validateUniqueHashtagName, ERROR_TEXT.notUnique, 1, true);
 
-
+/**
+ * функция для закрытия подложки
+ */
 const closeEditorPicture = () => {
   form.reset();
-  overlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onModalWindowEscape);
   pristine.reset();
   resetScale();
   resetEffect();
+  overlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onModalWindowEscape);
 };
 
 /**
@@ -92,6 +98,10 @@ const closeEditorPicture = () => {
  */
 const isFieldFocus = () => document.activeElement === hashtagsField || document.activeElement === commentsField;
 
+/**
+ * закрытие подложки с клавиатуры, кроме случяя поле ввода в фокусе
+ * @param {object} evt объект события
+ */
 function onModalWindowEscape(evt) {
   if (isEscapeKey(evt) && !isFieldFocus()) {
     evt.preventDefault();
@@ -99,21 +109,30 @@ function onModalWindowEscape(evt) {
   }
 }
 
+//действие при клике на кнопку закрыть
 cancelButton.addEventListener('click', () => {
   closeEditorPicture();
 });
 
-
+/**
+ *блокировка кнопки отправить
+ */
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = SubmitButtonText.BLOCK;
 };
 
+/**
+ *разблокировка кнопки отправить
+ */
 const unBlockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = SubmitButtonText.UNBLOCK;
 };
 
+/**
+ * показ загружаемого пользовательского фото
+ */
 const showUploadPicture = () => {
   const file = pictureField.files[0];
   const fileName = file.name.toLowerCase();
@@ -121,17 +140,24 @@ const showUploadPicture = () => {
   if (matches) {
     picturePreview.src = URL.createObjectURL(file);
     //const transformPictureEffectsPreview = Array.from(pictureEffectsPreview);
-    pictureEffectsPreview.forEach((preview) => {
-      preview.style.backgroundImage = `url(${picturePreview.src})`;
-    });
+    //transformPictureEffectsPreview.forEach((pictureEffectsPreview) => {
+    //  pictureEffectsPreview.style.backgroundImage = `url(${picturePreview.src})`;
+    //});
   }
 };
 
+
+//открытие модалки при событии change
 pictureField.addEventListener('change', () => {
   openEditorPicture();
   showUploadPicture();
 });
 
+
+/**
+ * отправка формы
+ * @param {object} callback данные из формы
+ */
 const setOnFormSubmit = (callback) => {
   form.addEventListener('submit', async (evt) => {
     evt.preventDefault();

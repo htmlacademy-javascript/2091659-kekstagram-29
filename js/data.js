@@ -1,15 +1,15 @@
 const BASE_URL = 'https://29.javascript.pages.academy/kekstagram'; //адрес удаленного сервера
-const Route = { //путь
+const Route = { //выпор пути для метода отправки
   GET_DATA: '/data',
   SEND_DATA: '/',
 };
-const Method = { //метод отправки
+const Method = { //методы для отправки
   GET: 'GET',
   POST: 'POST',
 };
-const ErrorText = { //текст ошибки
-  GET_DATA: 'Не удалось загрузить данные. Попробуйте обновить страницу',
-  SEND_DATA: 'Не удалось отправить форму. Попробуйте ещё раз',
+const ErrorText = { //текст для показа ошибки
+  GET_DATA: 'Обновите страницу, данные не загружены',
+  SEND_DATA: 'Попробуйте снова, форма не отправлена.',
 };
 
 /**
@@ -17,8 +17,8 @@ const ErrorText = { //текст ошибки
  * @param {string} route путь
  * @param {string} errorText текст ошибки
  * @param {string} method метод отправки
- * @param {any} body полезные данне (null-когда отправляем данные не нужны)
- * @returns результат ф-ии fetch - промис
+ * @param {any} body полезные данные, null по дефолту
+ * @returns fetch - промис
  */
 const load = (route, errorText, method = Method.GET, body = null) =>
   fetch(`${BASE_URL}${route}`, { method, body }) //передается путь, аргумент настроек
@@ -33,18 +33,16 @@ const load = (route, errorText, method = Method.GET, body = null) =>
     });
 
 /**
- * получение данных с сервера
- * даные получаем GET и если, что не так текст ошибки
- * @returns
+ * получение данных с сервера методом GET, при невозможности получить выдаст текст ошибки
+ * @returns данные в формате JSON
  */
 const getData = () => load(Route.GET_DATA, ErrorText.GET_DATA);
 
 /**
- * отправка данных на сервер, форму отправляем POST
- * @param {*} body полезые данные-отправка формы
- * @returns
+ * отправка формы при помощи POST
+ * @param {*} body данные для отправки формы(путь, текст ошибки, метод)
  */
 const sendData = (body) =>
-  load(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body); //путь, текст ошибки, метод
+  load(Route.SEND_DATA, ErrorText.SEND_DATA, Method.POST, body);
 
 export { getData, sendData };
