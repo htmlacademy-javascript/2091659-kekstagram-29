@@ -26,7 +26,9 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
-//Создание массива/списка комментариев
+/**
+ * Создание массива/списка комментариев
+ */
 const renderComments = () => {
   commentsShown += COMMENTS_PER_PORTION;
   if (commentsShown >= comments.length) {
@@ -47,7 +49,9 @@ const renderComments = () => {
   commentsCount.textContent = `${commentsShown} из ${comments.length} комментариев`;
 };
 
-//Дейстия при закрытите модального окна
+/**
+ * Дейстия при закрытите модального окна
+ */
 const closeModalWindow = () => {
   bigPicture.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
@@ -57,7 +61,10 @@ const closeModalWindow = () => {
 };
 
 
-// Событие нажатие клавиши, проверка что esc и закрытие модального окна
+/**
+ * Событие нажатие клавиши, проверка что esc и закрытие модального окна
+ * @param {*} evt  нажатие кнопки Esc
+ */
 function documentKeydownHandler(evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
@@ -67,14 +74,17 @@ function documentKeydownHandler(evt) {
 
 /**
  * функция по отбражению коментов, при нажатии на кнопку
- * @param {object} evt объект события
+ * @param {object} evt копка показать еще
  */
 function commentsButttonLoadHandler (evt) {
   evt.preventDefault();
   renderComments();
 }
 
-//Функция по отрисовки карточки при открытии в модалке
+/**
+ * Функция по отрисовки карточки при открытии в модалке
+ * @param {*} объект
+ */
 const renderPictureInformation = ({url, likes, description}) => {
   bigPicture.querySelector('.big-picture__img img').src = url;
   bigPicture.querySelector('.big-picture__img img').alt = description;
@@ -82,7 +92,10 @@ const renderPictureInformation = ({url, likes, description}) => {
   bigPicture.querySelector('.social__caption').textContent = description;
 };
 
-//Открытие модального окна
+/**
+ * Открытие модального окна
+ * @param {*} data
+ */
 const showBigPicture = (data) => {
   comments = data.comments;
   bigPicture.classList.remove('hidden');
@@ -96,7 +109,9 @@ const showBigPicture = (data) => {
 
 };
 
-//закрытие модалки по клику на кнопку закрытия
+/**
+ * закрытие модалки по клику на кнопку закрытия
+ */
 modalCloseButton.addEventListener('click', () => {
   closeModalWindow();
 });

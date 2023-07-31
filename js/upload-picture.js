@@ -17,10 +17,10 @@ const FILE_TYPES = ['gif', 'webp', 'jpeg', 'png', 'avif', 'jpg', 'svg'];
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');//форма загрузки
 const overlay = form.querySelector('.img-upload__overlay');//подложка
-const pictureField = form.querySelector('.img-upload__input');//контрол загрузки файла
+const pictureField = form.querySelector('.img-upload__input');//загрузка файла
 const hashtagsField = form.querySelector('.text__hashtags');//выбираем поле для хэштегов
 const commentsField = form.querySelector('.text__description');//выбираем поле для комментариев
-const cancelButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
+const closeButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
 const submitButton = form.querySelector('.img-upload__submit');//кнопка отправить
 const picturePreview = document.querySelector('.img-upload__preview img');//загруженное фото для обрабоки
 
@@ -33,7 +33,7 @@ const pristine = new Pristine(form, {
 /**
  * открытие подложки
  */
-const openEditorPicture = () => {
+const openUserPictureEditor = () => {
   overlay.classList.remove('hidden');//показ подложки
   body.classList.add('modal-open');//для отключения прокрутки под подложкой
   document.addEventListener('keydown', onModalWindowEscape);//обработчик закрытия на клавишу
@@ -44,14 +44,14 @@ const openEditorPicture = () => {
 
 
 /**
- * функция по определению хештега
+ * определяем наличие сивола #  вначале строки каждого хэштега
  * @param {string} hashtagString значение инпута
  * обрезаем пробелы, # отсоединяем по пробелу, массив с эл прошедшими проверку
  */
 const editHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((hashtag) => Boolean(hashtag.length));
 
 /**
- * Функция проверки введия невалидного хэш-тега
+ * проверка хэш-тега на соотвествие символам из регулярного выражения
  * @param {string} value текущее значение поля
  * перебираем массив на заданные условия, возвращаем true или false
  * .match() возвращает получившиеся совпадения при сопоставлении строки с регулярным выражением
@@ -59,13 +59,13 @@ const editHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((h
 const validateHashtag = (value) => editHashtag(value).every((hashtag) => (hashtag.match(VALID_SYMBOLS)));
 
 /**
- * Функция проверки превышено количество хэш-тегов
+ * проверка хэш-тегов на количество
  * @param {string} value текущее значение поля
  */
 const validateHashtagCount = (value) => editHashtag(value).length <= MAX_HASHTAGS_COUNT;
 
 /**
- * Функция проверки хэш-теги повторяются
+ * проверка хэш-тегов на повторение
  * @param {string} value текущее значение поля
  */
 const validateUniqueHashtagName = (value) => {
@@ -73,7 +73,9 @@ const validateUniqueHashtagName = (value) => {
   return UpperCaseHashtag.length === new Set(UpperCaseHashtag).size;
 };
 
-//валидаторы
+/**
+ * валидаторы
+ */
 pristine.addValidator(hashtagsField, validateHashtagCount, ERROR_TEXT.invalidCount, 3, true);
 pristine.addValidator(hashtagsField, validateHashtag, ERROR_TEXT.invalidHashtag, 2, true);
 pristine.addValidator(hashtagsField, validateUniqueHashtagName, ERROR_TEXT.notUnique, 1, true);
@@ -81,7 +83,7 @@ pristine.addValidator(hashtagsField, validateUniqueHashtagName, ERROR_TEXT.notUn
 /**
  * функция для закрытия подложки
  */
-const closeEditorPicture = () => {
+const closeUserPictureEditor = () => {
   form.reset();
   pristine.reset();
   resetScale();
@@ -104,13 +106,15 @@ const isFieldFocus = () => document.activeElement === hashtagsField || document.
 function onModalWindowEscape(evt) {
   if (isEscapeKey(evt) && !isFieldFocus()) {
     evt.preventDefault();
-    closeEditorPicture();
+    closeUserPictureEditor();
   }
 }
 
-//действие при клике на кнопку закрыть
-cancelButton.addEventListener('click', () => {
-  closeEditorPicture();
+/**
+ * действие при клике на кнопку закрыть
+ */
+closeButton.addEventListener('click', () => {
+  closeUserPictureEditor();
 });
 
 /**
@@ -130,7 +134,7 @@ const unBlockSubmitButton = () => {
 };
 
 /**
- * показ загружаемого пользовательского фото
+ * показ загружаемого пользователем фото
  */
 const showUploadPicture = () => {
   const file = pictureField.files[0];
@@ -142,9 +146,11 @@ const showUploadPicture = () => {
 };
 
 
-//открытие модалки при событии change
+/**
+ * открытие модалки при событии change
+ */
 pictureField.addEventListener('change', () => {
-  openEditorPicture();
+  openUserPictureEditor();
   showUploadPicture();
 });
 
@@ -165,4 +171,4 @@ const setOnFormSubmit = (callback) => {
   });
 };
 
-export { setOnFormSubmit, closeEditorPicture};
+export { setOnFormSubmit, closeUserPictureEditor};

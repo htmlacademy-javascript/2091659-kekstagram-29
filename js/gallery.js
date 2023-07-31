@@ -2,7 +2,7 @@ import { showBigPicture } from './show-big-picture.js';
 const container = document.querySelector('.pictures');
 
 /**
- * отрисовка миниатюры
+ * отрисовка выбранной картинки в модалке
  * @param {*} pictures
  */
 const renderGallery = (pictures) => {
