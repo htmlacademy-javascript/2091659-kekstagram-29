@@ -1,12 +1,5 @@
-/**
- * Находим содержимое шаблона.
- */
-const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
-
-/**
- * Находим тэг по классу куда будем складывать созданные элементы с фотографиями.
- */
-const container = document.querySelector('.pictures');
+const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');//Находим содержимое шаблона.
+const container = document.querySelector('.pictures');//Находим тэг по классу куда будем складывать созданные элементы с фотографиями.
 
 
 /**
