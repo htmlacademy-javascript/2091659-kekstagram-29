@@ -3,10 +3,10 @@ import { resetScale, addButtonScaleHandler } from './scale.js';
 import { addSliderEffectHandler, hideSlider, resetEffect} from './slider.js';
 
 const MAX_HASHTAGS_COUNT = 5;
-const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;//регулярное выражение
 const ERROR_TEXT = {
   invalidCount: `не более ${MAX_HASHTAGS_COUNT} хэш-тэгов`,
-  invalidHashtag: 'ошибка при вводе хеш-тега',
+  invalidHashtag: 'недопустимый хэш-тег',
   notUnique: 'хэш-тэг повторяется',
 };
 const SubmitButtonText = { //текст на кнопке отправить
@@ -23,7 +23,6 @@ const commentsField = form.querySelector('.text__description');//выбирае�
 const cancelButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
 const submitButton = form.querySelector('.img-upload__submit');//кнопка отправить
 const picturePreview = document.querySelector('.img-upload__preview img');//загруженное фото для обрабоки
-//const pictureEffectsPreview = document.querySelector('.effects__preview');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -139,10 +138,6 @@ const showUploadPicture = () => {
   const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
   if (matches) {
     picturePreview.src = URL.createObjectURL(file);
-    //const transformPictureEffectsPreview = Array.from(pictureEffectsPreview);
-    //transformPictureEffectsPreview.forEach((pictureEffectsPreview) => {
-    //  pictureEffectsPreview.style.backgroundImage = `url(${picturePreview.src})`;
-    //});
   }
 };
 

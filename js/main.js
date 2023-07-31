@@ -1,6 +1,6 @@
 import { getData, sendData } from './data.js';
 import { renderThumbnails } from './thumbnails.js';
-//import { renderGallery } from './gallery.js';
+import { renderGallery } from './gallery.js';
 import { setOnFormSubmit, closeEditorPicture } from './upload-picture.js';
 import { showAlert } from './alert.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
@@ -23,7 +23,7 @@ try {
   const pictureData = await getData();//получаем данные
   const debouncedRenderThumbnails = debounce(renderThumbnails);
   renderThumbnails(pictureData);// отрисовываем первоначально полученные данные загрузки
-  //renderGallery(pictureData);
+  renderGallery(pictureData);
   renderFilteredPictures(pictureData, debouncedRenderThumbnails);//рисуем отсортированные данные
 } catch (error) {
   showAlert(error.message);//сообщение при ошибке

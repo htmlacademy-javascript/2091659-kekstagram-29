@@ -1,6 +1,10 @@
 import { showBigPicture } from './show-big-picture.js';
 const container = document.querySelector('.pictures');
 
+/**
+ * отрисовка миниатюры
+ * @param {*} pictures
+ */
 const renderGallery = (pictures) => {
   container.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('[data-thumbnail-id]');

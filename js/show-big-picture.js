@@ -5,11 +5,12 @@ const modalCloseButton = bigPicture.querySelector('.big-picture__cancel');//Вн
 const bigPictureComments = bigPicture.querySelector('.social__comments');//Ищем список комментариев
 const commentElement = bigPicture.querySelector('.social__comment');//Ищем элемент списка комментариев
 const commentsCount = bigPicture.querySelector('.social__comment-count');//счетчик количества комментариев
-//const allCommentsCount = bigPicture.querySelector('.comments-count');//счетчик количества всех комментариев
 const commentsButttonLoad = document.querySelector('.social__comments-loader');//кнопка загрузки новой партии комментариев
 
 let commentsShown = 0;
 let comments = [];
+
+
 /**
  * Создание одного коментария
  * @param {object}
@@ -55,10 +56,6 @@ const closeModalWindow = () => {
   commentsShown = 0;
 };
 
-//Закрытие модалки по нажатию кнопки Esc
-//function closeButtonHandler () {
-//  closeModalWindow();
-//}
 
 // Событие нажатие клавиши, проверка что esc и закрытие модального окна
 function documentKeydownHandler(evt) {
@@ -99,6 +96,7 @@ const showBigPicture = (data) => {
 
 };
 
+//закрытие модалки по клику на кнопку закрытия
 modalCloseButton.addEventListener('click', () => {
   closeModalWindow();
 });
