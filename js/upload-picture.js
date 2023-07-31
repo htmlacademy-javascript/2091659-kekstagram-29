@@ -50,6 +50,7 @@ const openUserPictureEditor = () => {
  */
 const editHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((hashtag) => Boolean(hashtag.length));
 
+
 /**
  * проверка хэш-тега на соотвествие символам из регулярного выражения
  * @param {string} value текущее значение поля
@@ -58,11 +59,13 @@ const editHashtag = (hashtagString) => hashtagString.trim().split(' ').filter((h
  */
 const validateHashtag = (value) => editHashtag(value).every((hashtag) => (hashtag.match(VALID_SYMBOLS)));
 
+
 /**
  * проверка хэш-тегов на количество
  * @param {string} value текущее значение поля
  */
 const validateHashtagCount = (value) => editHashtag(value).length <= MAX_HASHTAGS_COUNT;
+
 
 /**
  * проверка хэш-тегов на повторение
@@ -73,12 +76,14 @@ const validateUniqueHashtagName = (value) => {
   return UpperCaseHashtag.length === new Set(UpperCaseHashtag).size;
 };
 
+
 /**
  * валидаторы
  */
 pristine.addValidator(hashtagsField, validateHashtagCount, ERROR_TEXT.invalidCount, 3, true);
 pristine.addValidator(hashtagsField, validateHashtag, ERROR_TEXT.invalidHashtag, 2, true);
 pristine.addValidator(hashtagsField, validateUniqueHashtagName, ERROR_TEXT.notUnique, 1, true);
+
 
 /**
  * функция для закрытия подложки
@@ -93,11 +98,13 @@ const closeUserPictureEditor = () => {
   document.removeEventListener('keydown', onModalWindowEscape);
 };
 
+
 /**
  * находим элементы в фокусе
  * @returns {boolean} — true, если попадает в фокус
  */
 const isFieldFocus = () => document.activeElement === hashtagsField || document.activeElement === commentsField;
+
 
 /**
  * закрытие подложки с клавиатуры, кроме случяя поле ввода в фокусе
@@ -110,12 +117,14 @@ function onModalWindowEscape(evt) {
   }
 }
 
+
 /**
  * действие при клике на кнопку закрыть
  */
 closeButton.addEventListener('click', () => {
   closeUserPictureEditor();
 });
+
 
 /**
  *блокировка кнопки отправить
@@ -125,6 +134,7 @@ const blockSubmitButton = () => {
   submitButton.textContent = SubmitButtonText.BLOCK;
 };
 
+
 /**
  *разблокировка кнопки отправить
  */
@@ -132,6 +142,7 @@ const unBlockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = SubmitButtonText.UNBLOCK;
 };
+
 
 /**
  * показ загружаемого пользователем фото

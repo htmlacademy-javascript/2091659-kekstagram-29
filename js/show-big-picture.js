@@ -26,6 +26,7 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
+
 /**
  * Создание массива/списка комментариев
  */
@@ -48,6 +49,7 @@ const renderComments = () => {
   bigPictureComments.append(commentsFragment);
   commentsCount.textContent = `${commentsShown} из ${comments.length} комментариев`;
 };
+
 
 /**
  * Дейстия при закрытите модального окна
@@ -72,6 +74,7 @@ function documentKeydownHandler(evt) {
   }
 }
 
+
 /**
  * функция по отбражению коментов, при нажатии на кнопку
  * @param {object} evt копка показать еще
@@ -80,6 +83,7 @@ function commentsButttonLoadHandler (evt) {
   evt.preventDefault();
   renderComments();
 }
+
 
 /**
  * Функция по отрисовки карточки при открытии в модалке
@@ -91,6 +95,7 @@ const renderPictureInformation = ({url, likes, description}) => {
   bigPicture.querySelector('.likes-count').textContent = likes;
   bigPicture.querySelector('.social__caption').textContent = description;
 };
+
 
 /**
  * Открытие модального окна
@@ -108,6 +113,7 @@ const showBigPicture = (data) => {
   renderComments(data.comments);
 
 };
+
 
 /**
  * закрытие модалки по клику на кнопку закрытия

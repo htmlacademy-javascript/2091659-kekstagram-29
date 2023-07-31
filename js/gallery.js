@@ -1,6 +1,7 @@
 import { showBigPicture } from './show-big-picture.js';
 const container = document.querySelector('.pictures');
 
+
 /**
  * отрисовка выбранной картинки в модалке
  * @param {*} pictures

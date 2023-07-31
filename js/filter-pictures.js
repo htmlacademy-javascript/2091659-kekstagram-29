@@ -12,10 +12,12 @@ const pictureFilter = document.querySelector('.img-filters');
 let currentFilter = Filter.DEFAULT;
 let pictures = [];
 
+
 /**
  * сортировка случайных фото
  */
 const getRandomFilteredPicture = () => Math.random() - 0.5;
+
 
 /**
  * сортировка обсуждаемых фото
@@ -23,6 +25,7 @@ const getRandomFilteredPicture = () => Math.random() - 0.5;
  * @param {Array} pictureB массив коментариев
  */
 const getDiscussedFilteredPicture = (pictureA, pictureB) => pictureB.comments.length - pictureA.comments.length;
+
 
 /**
  * сортировка фото по выбраному фильтру
@@ -38,6 +41,7 @@ const getFilteredPictures = () => {
       return [...pictures];
   }
 };
+
 
 /**
  * обработка клика по фильтрам сортировки
