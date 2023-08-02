@@ -23,6 +23,7 @@ const commentsField = form.querySelector('.text__description');//выбирае�
 const closeButton = form.querySelector('.img-upload__cancel');//кнопка закрыть
 const submitButton = form.querySelector('.img-upload__submit');//кнопка отправить
 const picturePreview = document.querySelector('.img-upload__preview img');//загруженное фото для обрабоки
+const previewThumbnails = document.querySelectorAll('.effects__label > span');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -127,20 +128,12 @@ closeButton.addEventListener('click', () => {
 
 
 /**
- *блокировка кнопки отправить
+ * Блокировка разблокировка кнопки отправить
+ * @param {*} isDisabled
  */
-const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.BLOCK;
-};
-
-
-/**
- *разблокировка кнопки отправить
- */
-const unBlockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.UNBLOCK;
+const toggleSubmit = (isDisabled) => {
+  submitButton.disabled = isDisabled;
+  submitButton.textContent = isDisabled ? SubmitButtonText.BLOCK : SubmitButtonText.UNBLOCK;
 };
 
 
@@ -153,6 +146,9 @@ const showUploadPicture = () => {
   const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
   if (matches) {
     picturePreview.src = URL.createObjectURL(file);
+    previewThumbnails.forEach((element) => {
+      element.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
+    });
   }
 };
 
@@ -175,9 +171,9 @@ const setOnFormSubmit = (callback) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
-      blockSubmitButton();
+      toggleSubmit(true);
       await callback(new FormData(form));
-      unBlockSubmitButton();
+      toggleSubmit();
     }
   });
 };
